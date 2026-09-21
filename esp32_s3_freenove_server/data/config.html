@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ESP32-S3-FreeNove - Configurações Wi-Fi</title>
 
-<style>
-/* ================================================================
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ESP32-S3-FreeNove - Configurações Wi-Fi</title>
+
+  <style>
+    /* ================================================================
    CSS INCORPORADO NO config.html
    ================================================================
    A página de configuração usa o mesmo CSS visual do index.html.
@@ -21,480 +22,462 @@
    - adaptação para telas pequenas.
    ================================================================ */
 
-body{
-  font-family:Arial,sans-serif;
-  margin:0;
-  background:#f3f5f7;
-  color:#20242a;
-}
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f3f5f7;
+      color: #20242a;
+    }
 
-header{
-  background:#1f2937;
-  color:white;
-  padding:18px 22px;
-}
+    header {
+      background: #1f2937;
+      color: white;
+      padding: 18px 22px;
+    }
 
-main{
-  max-width:1150px;
-  margin:auto;
-  padding:18px;
-}
+    main {
+      max-width: 1150px;
+      margin: auto;
+      padding: 18px;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:16px;
-}
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 16px;
+    }
 
-.card{
-  background:white;
-  border-radius:12px;
-  padding:16px;
-  box-shadow:0 2px 10px #0001;
-  margin-bottom:16px;
-}
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 10px #0001;
+      margin-bottom: 16px;
+    }
 
-h1,h2{
-  margin-top:0;
-}
+    h1,
+    h2 {
+      margin-top: 0;
+    }
 
-.muted{
-  color:#68717c;
-}
+    .muted {
+      color: #68717c;
+    }
 
-select,
-input,
-button{
-  border:1px solid #ccd2d9;
-  border-radius:7px;
-  padding:8px;
-  background:white;
-  font-weight:bold;
-  box-sizing:border-box;
-}
+    select,
+    input,
+    button {
+      border: 1px solid #ccd2d9;
+      border-radius: 7px;
+      padding: 8px;
+      background: white;
+      font-weight: bold;
+      box-sizing: border-box;
+    }
 
-input,
-select{
-  width:100%;
-  margin-top:6px;
-}
+    input,
+    select {
+      width: 100%;
+      margin-top: 6px;
+    }
 
-button{
-  cursor:pointer;
-}
+    button {
+      cursor: pointer;
+    }
 
-button:hover{
-  filter:brightness(.96);
-}
+    button:hover {
+      filter: brightness(.96);
+    }
 
-.badge{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:12px;
-  background:#e8eef7;
-}
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      background: #e8eef7;
+    }
 
-.status-ok{
-  font-weight:bold;
-}
+    .status-ok {
+      font-weight: bold;
+    }
 
-.network{
-  border:1px solid #e1e5e9;
-  border-radius:8px;
-  padding:10px;
-  margin-top:8px;
-  cursor:pointer;
-  background:#fafbfc;
-}
+    .network {
+      border: 1px solid #e1e5e9;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 8px;
+      cursor: pointer;
+      background: #fafbfc;
+    }
 
-.network:hover{
-  background:#eef2f6;
-}
+    .network:hover {
+      background: #eef2f6;
+    }
 
-.action{
-  margin-top:16px;
-}
+    .action {
+      margin-top: 16px;
+    }
 
-#msg{
-  position:fixed;
-  right:15px;
-  bottom:15px;
-  background:#20242a;
-  color:white;
-  padding:10px 14px;
-  border-radius:8px;
-  display:none;
-}
+    #msg {
+      position: fixed;
+      right: 15px;
+      bottom: 15px;
+      background: #20242a;
+      color: white;
+      padding: 10px 14px;
+      border-radius: 8px;
+      display: none;
+    }
 
-label{
-  display:block;
-  margin-top:10px;
-}
+    label {
+      display: block;
+      margin-top: 10px;
+    }
 
-a{
-  color:inherit;
-}
+    a {
+      color: inherit;
+    }
 
-@media(max-width:700px){
-  main{
-    padding:12px;
-  }
+    @media(max-width:700px) {
+      main {
+        padding: 12px;
+      }
 
-  header{
-    padding:15px;
-  }
-}
-</style>
+      header {
+        padding: 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- ================================================================
+  <!-- ================================================================
      CABEÇALHO
      ================================================================
      Mantém o mesmo padrão visual da página index.html.
      ================================================================ -->
-<header>
-  <h1>ESP32-S3-FreeNove — Configurações</h1>
-  <div>Wi-Fi • Endereço IP • Access Point</div>
-  <div style="margin-top:8px;font-size:.9em">🔒 Acesso protegido por usuário e senha</div>
-</header>
+  <header>
+    <h1>ESP32-S3-FreeNove — Configurações</h1>
+    <div>Wi-Fi • Endereço IP • Access Point</div>
+    <div style="margin-top:8px;font-size:.9em">🔒 Acesso protegido por usuário e senha</div>
+  </header>
 
-<main>
+  <main>
 
-<!-- ================================================================
+    <!-- ================================================================
      ESTADO ATUAL DA REDE
      ================================================================ -->
-<section class="card">
-  <h2>Estado da placa</h2>
+    <section class="card">
+      <h2>Estado da placa</h2>
 
-  <!-- Mostra se o ESP32 está conectado à rede Wi-Fi. -->
-  <p>
-    Wi-Fi:
-    <span id="connection" class="badge">verificando...</span>
-  </p>
+      <!-- Mostra se o ESP32 está conectado à rede Wi-Fi. -->
+      <p>
+        Wi-Fi:
+        <span id="connection" class="badge">verificando...</span>
+      </p>
 
-  <!-- Mostra o SSID atualmente conectado. -->
-  <p>
-    SSID conectado:
-    <span id="currentSSID" class="value">-</span>
-  </p>
+      <!-- Mostra o SSID atualmente conectado. -->
+      <p>
+        SSID conectado:
+        <span id="currentSSID" class="value">-</span>
+      </p>
 
-  <!-- Mostra o endereço IP recebido ou configurado na rede local. -->
-  <p>
-    IP na rede local:
-    <span id="localIP" class="value">-</span>
-  </p>
+      <!-- Mostra o endereço IP recebido ou configurado na rede local. -->
+      <p>
+        IP na rede local:
+        <span id="localIP" class="value">-</span>
+      </p>
 
-  <!-- Mostra o endereço IP do Access Point próprio do ESP32. -->
-  <p>
-    IP do Access Point:
-    <span id="apIP" class="value">192.168.4.1</span>
-  </p>
+      <!-- Mostra o endereço IP do Access Point próprio do ESP32. -->
+      <p>
+        IP do Access Point:
+        <span id="apIP" class="value">192.168.4.1</span>
+      </p>
 
-  <p class="muted">
-    O Access Point permanece ativo para permitir a configuração
-    mesmo quando o ESP32 também estiver conectado à rede local.
-  </p>
-</section>
+      <p class="muted">
+        O Access Point permanece ativo para permitir a configuração
+        mesmo quando o ESP32 também estiver conectado à rede local.
+      </p>
+    </section>
 
-<!-- ================================================================
+    <!-- ================================================================
      PESQUISA DE REDES WI-FI
      ================================================================ -->
-<section class="card">
-  <h2>Procurar redes Wi-Fi</h2>
+    <section class="card">
+      <h2>Procurar redes Wi-Fi</h2>
 
-  <p class="muted">
-    Clique no botão para procurar as redes disponíveis.
-    Depois, clique em uma rede encontrada para preencher o SSID.
-  </p>
+      <p class="muted">
+        Clique no botão para procurar as redes disponíveis.
+        Depois, clique em uma rede encontrada para preencher o SSID.
+      </p>
 
-  <button onclick="scanNetworks()">Procurar redes</button>
+      <button onclick="scanNetworks()">Procurar redes</button>
 
-  <!-- A lista de redes encontrada pelo ESP32 será inserida aqui. -->
-  <div id="networks" style="margin-top:12px"></div>
-</section>
+      <!-- A lista de redes encontrada pelo ESP32 será inserida aqui. -->
+      <div id="networks" style="margin-top:12px"></div>
+    </section>
 
-<!-- ================================================================
+    <!-- ================================================================
      CONFIGURAÇÃO DA REDE WI-FI
      ================================================================ -->
-<section class="card">
-  <h2>Configuração Wi-Fi</h2>
+    <section class="card">
+      <h2>Configuração Wi-Fi</h2>
 
-  <div class="grid">
+      <div class="grid">
 
-    <!-- Campo para informar o nome da rede. -->
-    <div>
-      <label for="ssid">Nome da rede (SSID)</label>
-      <input
-        id="ssid"
-        maxlength="32"
-        placeholder="Nome da rede Wi-Fi">
-    </div>
+        <!-- Campo para informar o nome da rede. -->
+        <div>
+          <label for="ssid">Nome da rede (SSID)</label>
+          <input id="ssid" maxlength="32" placeholder="Nome da rede Wi-Fi">
+        </div>
 
-    <!-- Campo para informar a senha da rede. -->
-    <div>
-      <label for="password">Senha</label>
-      <input
-        id="password"
-        type="password"
-        maxlength="63"
-        placeholder="Senha da rede Wi-Fi">
-    </div>
+        <!-- Campo para informar a senha da rede. -->
+        <div>
+          <label for="password">Senha</label>
+          <input id="password" type="password" maxlength="63" placeholder="Senha da rede Wi-Fi">
+        </div>
 
-  </div>
+      </div>
 
-  <!-- ==============================================================
+      <!-- ==============================================================
        MODO DE ENDEREÇAMENTO IP
        ============================================================== -->
-  <label for="ipmode">Endereço IP</label>
+      <label for="ipmode">Endereço IP</label>
 
-  <select id="ipmode" onchange="toggleStaticFields()">
-    <option value="dhcp">DHCP - automático</option>
-    <option value="static">IP fixo</option>
-  </select>
+      <select id="ipmode" onchange="toggleStaticFields()">
+        <option value="dhcp">DHCP - automático</option>
+        <option value="static">IP fixo</option>
+      </select>
 
-  <!-- ==============================================================
+      <!-- ==============================================================
        CAMPOS PARA IP FIXO
        ==============================================================
        Esses campos somente aparecem quando o usuário seleciona
        "IP fixo".
        ============================================================== -->
-  <div id="staticFields" class="grid" style="display:none">
+      <div id="staticFields" class="grid" style="display:none">
 
-    <div>
-      <label for="ip">IP da placa</label>
-      <input
-        id="ip"
-        value="192.168.1.200"
-        inputmode="decimal">
-    </div>
+        <div>
+          <label for="ip">IP da placa</label>
+          <input id="ip" value="192.168.1.200" inputmode="decimal">
+        </div>
 
-    <div>
-      <label for="gateway">Gateway</label>
-      <input
-        id="gateway"
-        value="192.168.1.1"
-        inputmode="decimal">
-    </div>
+        <div>
+          <label for="gateway">Gateway</label>
+          <input id="gateway" value="192.168.1.1" inputmode="decimal">
+        </div>
 
-    <div>
-      <label for="subnet">Máscara</label>
-      <input
-        id="subnet"
-        value="255.255.255.0"
-        inputmode="decimal">
-    </div>
+        <div>
+          <label for="subnet">Máscara</label>
+          <input id="subnet" value="255.255.255.0" inputmode="decimal">
+        </div>
 
-    <div>
-      <label for="dns">DNS</label>
-      <input
-        id="dns"
-        value="8.8.8.8"
-        inputmode="decimal">
-    </div>
+        <div>
+          <label for="dns">DNS</label>
+          <input id="dns" value="8.8.8.8" inputmode="decimal">
+        </div>
 
-  </div>
+      </div>
 
-  <!-- Botão que envia a configuração para o ESP32. -->
-  <button class="action" onclick="saveConfig()">
-    Salvar e conectar
-  </button>
+      <!-- Botão que envia a configuração para o ESP32. -->
+      <button class="action" onclick="saveConfig()">
+        Salvar e conectar
+      </button>
 
-  <p class="muted">
-    Depois de salvar, o ESP32 tenta conectar à rede informada.
-    O endereço IP local será mostrado na parte superior.
-  </p>
-</section>
+      <p class="muted">
+        Depois de salvar, o ESP32 tenta conectar à rede informada.
+        O endereço IP local será mostrado na parte superior.
+      </p>
+    </section>
 
-<!-- ================================================================
+    <!-- ================================================================
      NAVEGAÇÃO
      ================================================================ -->
-<section class="card">
-  <a href="/">← Voltar ao painel de I/O</a>
-</section>
+    <section class="card">
+      <a href="/">← Voltar ao painel de I/O</a>
+    </section>
 
-</main>
+  </main>
 
-<!-- Área utilizada para mensagens temporárias. -->
-<div id="msg"></div>
+  <!-- Área utilizada para mensagens temporárias. -->
+  <div id="msg"></div>
 
-<script>
-/* ================================================================
-   JAVASCRIPT DO config.html
-   ================================================================
-   O JavaScript está incorporado neste próprio arquivo, assim como
-   o CSS.
+  <script>
+    /* ================================================================
+       JAVASCRIPT DO config.html
+       ================================================================
+       O JavaScript está incorporado neste próprio arquivo, assim como
+       o CSS.
+    
+       Isso significa que config.html pode funcionar sem depender de:
+           /style.css
+           /script.js
+    
+       As requisições continuam sendo feitas para as APIs HTTP
+       disponibilizadas pelo ESP32:
+           /api/wifi/status
+           /api/wifi/scan
+           /api/wifi/save
+       ================================================================ */
 
-   Isso significa que config.html pode funcionar sem depender de:
-       /style.css
-       /script.js
-
-   As requisições continuam sendo feitas para as APIs HTTP
-   disponibilizadas pelo ESP32:
-       /api/wifi/status
-       /api/wifi/scan
-       /api/wifi/save
-   ================================================================ */
-
-/* ---------------------------------------------------------------
-   Função auxiliar para localizar elementos HTML pelo ID.
-   --------------------------------------------------------------- */
-const $ = id => document.getElementById(id);
-
-
-/* ---------------------------------------------------------------
-   Mostra uma mensagem temporária para o usuário.
-   --------------------------------------------------------------- */
-function message(text){
-
-  $("msg").textContent = text;
-  $("msg").style.display = "block";
-
-  /* A mensagem desaparece automaticamente depois de 2 segundos. */
-  setTimeout(() => {
-    $("msg").style.display = "none";
-  }, 2000);
-}
+    /* ---------------------------------------------------------------
+       Função auxiliar para localizar elementos HTML pelo ID.
+       --------------------------------------------------------------- */
+    const $ = id => document.getElementById(id);
 
 
-/* ================================================================
-   ATUALIZAÇÃO DO ESTADO DO WI-FI
-   ================================================================
-   Consulta o ESP32 e atualiza:
-       - estado da conexão;
-       - SSID;
-       - IP local;
-       - IP do Access Point;
-       - modo DHCP ou IP fixo.
-   ================================================================ */
-async function loadWiFiStatus(){
+    /* ---------------------------------------------------------------
+       Mostra uma mensagem temporária para o usuário.
+       --------------------------------------------------------------- */
+    function message(text) {
 
-  try{
+      $("msg").textContent = text;
+      $("msg").style.display = "block";
 
-    const response = await fetch(
-      "/api/wifi/status",
-      {cache:"no-store"}
-    );
-
-    if(!response.ok){
-      throw new Error("Falha ao consultar o Wi-Fi");
+      /* A mensagem desaparece automaticamente depois de 2 segundos. */
+      setTimeout(() => {
+        $("msg").style.display = "none";
+      }, 2000);
     }
 
-    const data = await response.json();
 
-    /* Atualiza o estado da conexão. */
-    $("connection").textContent =
-      data.connected ? "Conectado" : "Desconectado";
+    /* ================================================================
+       ATUALIZAÇÃO DO ESTADO DO WI-FI
+       ================================================================
+       Consulta o ESP32 e atualiza:
+           - estado da conexão;
+           - SSID;
+           - IP local;
+           - IP do Access Point;
+           - modo DHCP ou IP fixo.
+       ================================================================ */
+    async function loadWiFiStatus() {
 
-    /* Atualiza o SSID conectado. */
-    $("currentSSID").textContent =
-      data.ssid || "-";
+      try {
 
-    /* Atualiza o IP recebido/configurado. */
-    $("localIP").textContent =
-      data.localIP || "-";
+        const response = await fetch(
+          "/api/wifi/status",
+          { cache: "no-store" }
+        );
 
-    /* Atualiza o IP do Access Point. */
-    $("apIP").textContent =
-      data.apIP || "192.168.4.1";
+        if (!response.ok) {
+          throw new Error("Falha ao consultar o Wi-Fi");
+        }
 
-    /* ------------------------------------------------------------
-       Se o ESP32 retornar os parâmetros de IP fixo, eles são
-       utilizados para preencher os campos da página.
-       ------------------------------------------------------------ */
-    if(data.static !== undefined){
+        const data = await response.json();
 
-      $("ipmode").value =
-        data.static ? "static" : "dhcp";
+        /* Atualiza o estado da conexão. */
+        $("connection").textContent =
+          data.connected ? "Conectado" : "Desconectado";
 
-      toggleStaticFields();
+        /* Atualiza o SSID conectado. */
+        $("currentSSID").textContent =
+          data.ssid || "-";
+
+        /* Atualiza o IP recebido/configurado. */
+        $("localIP").textContent =
+          data.localIP || "-";
+
+        /* Atualiza o IP do Access Point. */
+        $("apIP").textContent =
+          data.apIP || "192.168.4.1";
+
+        /* ------------------------------------------------------------
+           Se o ESP32 retornar os parâmetros de IP fixo, eles são
+           utilizados para preencher os campos da página.
+           ------------------------------------------------------------ */
+        if (data.static !== undefined) {
+
+          $("ipmode").value =
+            data.static ? "static" : "dhcp";
+
+          toggleStaticFields();
+        }
+
+        if (data.ip) {
+          $("ip").value = data.ip;
+        }
+
+        if (data.gateway) {
+          $("gateway").value = data.gateway;
+        }
+
+        if (data.subnet) {
+          $("subnet").value = data.subnet;
+        }
+
+        if (data.dns) {
+          $("dns").value = data.dns;
+        }
+
+      }
+      catch (error) {
+
+        $("connection").textContent =
+          "Não foi possível consultar";
+
+        message("ESP32 indisponível");
+      }
     }
 
-    if(data.ip){
-      $("ip").value = data.ip;
+
+    /* ================================================================
+       MOSTRAR/OCULTAR CAMPOS DE IP FIXO
+       ================================================================ */
+    function toggleStaticFields() {
+
+      const isStatic =
+        $("ipmode").value === "static";
+
+      $("staticFields").style.display =
+        isStatic ? "grid" : "none";
     }
 
-    if(data.gateway){
-      $("gateway").value = data.gateway;
-    }
 
-    if(data.subnet){
-      $("subnet").value = data.subnet;
-    }
+    /* ================================================================
+       PESQUISA DE REDES WI-FI
+       ================================================================
+       Solicita ao ESP32 uma varredura das redes encontradas.
+       ================================================================ */
+    async function scanNetworks() {
 
-    if(data.dns){
-      $("dns").value = data.dns;
-    }
-
-  }
-  catch(error){
-
-    $("connection").textContent =
-      "Não foi possível consultar";
-
-    message("ESP32 indisponível");
-  }
-}
-
-
-/* ================================================================
-   MOSTRAR/OCULTAR CAMPOS DE IP FIXO
-   ================================================================ */
-function toggleStaticFields(){
-
-  const isStatic =
-    $("ipmode").value === "static";
-
-  $("staticFields").style.display =
-    isStatic ? "grid" : "none";
-}
-
-
-/* ================================================================
-   PESQUISA DE REDES WI-FI
-   ================================================================
-   Solicita ao ESP32 uma varredura das redes encontradas.
-   ================================================================ */
-async function scanNetworks(){
-
-  const container = $("networks");
-
-  container.innerHTML =
-    '<p class="muted">Procurando redes...</p>';
-
-  try{
-
-    const response = await fetch(
-      "/api/wifi/scan",
-      {cache:"no-store"}
-    );
-
-    if(!response.ok){
-      throw new Error(await response.text());
-    }
-
-    const data = await response.json();
-
-    /* Verifica se o ESP32 retornou uma lista. */
-    if(!data.networks || !data.networks.length){
+      const container = $("networks");
 
       container.innerHTML =
-        '<p class="muted">Nenhuma rede encontrada.</p>';
+        '<p class="muted">Procurando redes...</p>';
 
-      return;
-    }
+      try {
 
-    /* ------------------------------------------------------------
-       Cria visualmente cada rede encontrada.
-       ------------------------------------------------------------ */
-    container.innerHTML =
-      data.networks.map(network => {
+        const response = await fetch(
+          "/api/wifi/scan",
+          { cache: "no-store" }
+        );
 
-        const security =
-          network.secure ? "🔒" : "Aberta";
+        if (!response.ok) {
+          throw new Error(await response.text());
+        }
 
-        return `
+        const data = await response.json();
+
+        /* Verifica se o ESP32 retornou uma lista. */
+        if (!data.networks || !data.networks.length) {
+
+          container.innerHTML =
+            '<p class="muted">Nenhuma rede encontrada.</p>';
+
+          return;
+        }
+
+        /* ------------------------------------------------------------
+           Cria visualmente cada rede encontrada.
+           ------------------------------------------------------------ */
+        container.innerHTML =
+          data.networks.map(network => {
+
+            const security =
+              network.secure ? "🔒" : "Aberta";
+
+            return `
           <div
             class="network"
             onclick="selectNetwork(${JSON.stringify(network.ssid)})">
@@ -512,162 +495,163 @@ async function scanNetworks(){
           </div>
         `;
 
-      }).join("");
+          }).join("");
 
-  }
-  catch(error){
+      }
+      catch (error) {
 
-    container.innerHTML =
-      '<p class="muted">Erro ao procurar redes.</p>';
+        container.innerHTML =
+          '<p class="muted">Erro ao procurar redes.</p>';
 
-    message("Erro na varredura Wi-Fi");
-  }
-}
-
-
-/* ---------------------------------------------------------------
-   Preenche o campo SSID quando o usuário escolhe uma rede.
-   --------------------------------------------------------------- */
-function selectNetwork(ssid){
-
-  $("ssid").value = ssid;
-
-  message("SSID selecionado");
-}
-
-
-/* ================================================================
-   PROTEÇÃO BÁSICA CONTRA HTML NA LISTA DE REDES
-   ================================================================
-   O SSID vem do ambiente Wi-Fi e não deve ser inserido diretamente
-   no HTML sem tratamento.
-   ================================================================ */
-function escapeHTML(value){
-
-  return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-}
-
-
-/* ================================================================
-   SALVAR CONFIGURAÇÃO
-   ================================================================
-   Envia para o ESP32:
-       - SSID;
-       - senha;
-       - DHCP ou IP fixo;
-       - IP;
-       - gateway;
-       - máscara;
-       - DNS.
-   ================================================================ */
-async function saveConfig(){
-
-  const ssid =
-    $("ssid").value.trim();
-
-  const password =
-    $("password").value;
-
-  const mode =
-    $("ipmode").value;
-
-  /* O SSID é obrigatório. */
-  if(!ssid){
-
-    message("Informe o nome da rede Wi-Fi");
-    return;
-  }
-
-  /*
-     Monta os parâmetros que serão enviados para a API.
-     URLSearchParams evita problemas com caracteres especiais.
-  */
-  const params = new URLSearchParams();
-
-  params.set("ssid", ssid);
-  params.set("password", password);
-  params.set("mode", mode);
-
-  /* ------------------------------------------------------------
-     Quando o usuário selecionou IP fixo, adicionamos os quatro
-     parâmetros correspondentes.
-     ------------------------------------------------------------ */
-  if(mode === "static"){
-
-    params.set("ip", $("ip").value.trim());
-    params.set("gateway", $("gateway").value.trim());
-    params.set("subnet", $("subnet").value.trim());
-    params.set("dns", $("dns").value.trim());
-  }
-
-  try{
-
-    message("Salvando configuração...");
-
-    const response = await fetch(
-      "/api/wifi/save?" + params.toString(),
-      {cache:"no-store"}
-    );
-
-    if(!response.ok){
-
-      throw new Error(
-        await response.text()
-      );
+        message("Erro na varredura Wi-Fi");
+      }
     }
 
-    const data =
-      await response.json();
+
+    /* ---------------------------------------------------------------
+       Preenche o campo SSID quando o usuário escolhe uma rede.
+       --------------------------------------------------------------- */
+    function selectNetwork(ssid) {
+
+      $("ssid").value = ssid;
+
+      message("SSID selecionado");
+    }
+
+
+    /* ================================================================
+       PROTEÇÃO BÁSICA CONTRA HTML NA LISTA DE REDES
+       ================================================================
+       O SSID vem do ambiente Wi-Fi e não deve ser inserido diretamente
+       no HTML sem tratamento.
+       ================================================================ */
+    function escapeHTML(value) {
+
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+
+    /* ================================================================
+       SALVAR CONFIGURAÇÃO
+       ================================================================
+       Envia para o ESP32:
+           - SSID;
+           - senha;
+           - DHCP ou IP fixo;
+           - IP;
+           - gateway;
+           - máscara;
+           - DNS.
+       ================================================================ */
+    async function saveConfig() {
+
+      const ssid =
+        $("ssid").value.trim();
+
+      const password =
+        $("password").value;
+
+      const mode =
+        $("ipmode").value;
+
+      /* O SSID é obrigatório. */
+      if (!ssid) {
+
+        message("Informe o nome da rede Wi-Fi");
+        return;
+      }
+
+      /*
+         Monta os parâmetros que serão enviados para a API.
+         URLSearchParams evita problemas com caracteres especiais.
+      */
+      const params = new URLSearchParams();
+
+      params.set("ssid", ssid);
+      params.set("password", password);
+      params.set("mode", mode);
+
+      /* ------------------------------------------------------------
+         Quando o usuário selecionou IP fixo, adicionamos os quatro
+         parâmetros correspondentes.
+         ------------------------------------------------------------ */
+      if (mode === "static") {
+
+        params.set("ip", $("ip").value.trim());
+        params.set("gateway", $("gateway").value.trim());
+        params.set("subnet", $("subnet").value.trim());
+        params.set("dns", $("dns").value.trim());
+      }
+
+      try {
+
+        message("Salvando configuração...");
+
+        const response = await fetch(
+          "/api/wifi/save?" + params.toString(),
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+
+          throw new Error(
+            await response.text()
+          );
+        }
+
+        const data =
+          await response.json();
+
+        /*
+           A API pode retornar uma mensagem própria.
+           Caso não retorne, usamos uma mensagem padrão.
+        */
+        message(
+          data.message ||
+          "Configuração salva. Conectando..."
+        );
+
+        /*
+           Aguarda um pouco e consulta novamente o estado.
+           Isso permite que o ESP32 tenha tempo para iniciar
+           a conexão com o roteador.
+        */
+        setTimeout(loadWiFiStatus, 1500);
+
+      }
+      catch (error) {
+
+        message(
+          "Erro ao salvar: " + error.message
+        );
+      }
+    }
+
+
+    /* ================================================================
+       INICIALIZAÇÃO DA PÁGINA
+       ================================================================ */
+
+    /* Define inicialmente o estado correto dos campos de IP. */
+    toggleStaticFields();
+
+    /* Consulta imediatamente o estado atual do Wi-Fi. */
+    loadWiFiStatus();
 
     /*
-       A API pode retornar uma mensagem própria.
-       Caso não retorne, usamos uma mensagem padrão.
+       Atualiza o estado periodicamente.
+       Assim, quando o ESP32 terminar de conectar ao roteador,
+       o IP aparece automaticamente na tela.
     */
-    message(
-      data.message ||
-      "Configuração salva. Conectando..."
-    );
+    setInterval(loadWiFiStatus, 2000);
 
-    /*
-       Aguarda um pouco e consulta novamente o estado.
-       Isso permite que o ESP32 tenha tempo para iniciar
-       a conexão com o roteador.
-    */
-    setTimeout(loadWiFiStatus, 1500);
-
-  }
-  catch(error){
-
-    message(
-      "Erro ao salvar: " + error.message
-    );
-  }
-}
-
-
-/* ================================================================
-   INICIALIZAÇÃO DA PÁGINA
-   ================================================================ */
-
-/* Define inicialmente o estado correto dos campos de IP. */
-toggleStaticFields();
-
-/* Consulta imediatamente o estado atual do Wi-Fi. */
-loadWiFiStatus();
-
-/*
-   Atualiza o estado periodicamente.
-   Assim, quando o ESP32 terminar de conectar ao roteador,
-   o IP aparece automaticamente na tela.
-*/
-setInterval(loadWiFiStatus, 2000);
-
-</script>
+  </script>
 
 </body>
+
 </html>

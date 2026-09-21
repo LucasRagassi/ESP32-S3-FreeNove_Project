@@ -1,43 +1,306 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ESP32-S3-FreeNove</title>
-<style>
-/* CSS incorporado para facilitar o estudo e a gravação no LittleFS. */
-:root{--navy:#17233b;--blue:#2563eb;--bg:#eef2f7}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#1c2738;font:15px Arial,sans-serif}header{background:linear-gradient(120deg,var(--navy),#254d7a);color:#fff;padding:22px}header h1{margin:0 0 6px}main{max-width:1250px;margin:auto;padding:18px}.card{background:#fff;border-radius:13px;padding:17px;margin-bottom:16px;box-shadow:0 3px 14px #14213d18;overflow:auto}.summary{display:flex;gap:10px;flex-wrap:wrap}.pill,.badge{padding:5px 9px;border-radius:99px;background:#e7eef8;font-weight:bold}.online,.high{background:#dcfce7;color:#08743f}.offline,.low{background:#fee2e2;color:#a51d1d}.mode-in{background:#e0f2fe;color:#075985}.mode-out{background:#ede9fe;color:#5b21b6}.mode-adc{background:#fef3c7;color:#92400e}table{width:100%;border-collapse:collapse;min-width:760px}th,td{padding:9px;border-bottom:1px solid #e6eaf0;text-align:left;vertical-align:middle}th{background:#f7f9fc}button,select,input{padding:7px;border:1px solid #cbd3df;border-radius:7px;background:#fff}button{cursor:pointer;font-weight:bold}.selected{background:var(--blue);color:#fff}.muted{color:#677386;font-size:.92em}.adc-config{display:grid;grid-template-columns:repeat(6,minmax(90px,1fr));gap:6px}a{color:#1658b5}#message{position:fixed;right:15px;bottom:15px;background:#17233b;color:#fff;padding:10px;border-radius:8px;display:none}@media(max-width:760px){.adc-config{grid-template-columns:1fr 1fr}}
-/* Ajuste específico da tabela ADC: colunas, títulos e controles compactos. */
-.card table{table-layout:fixed;min-width:900px}
-.card th{text-align:center;vertical-align:middle;white-space:normal}
-.card td{vertical-align:middle}
-.card th:nth-child(1),.card td:nth-child(1){width:12%;text-align:left}
-.card th:nth-child(2),.card td:nth-child(2){width:18%;text-align:center}
-.card th:nth-child(3),.card td:nth-child(3){width:50%;text-align:left}
-.card th:nth-child(4),.card td:nth-child(4){width:20%;text-align:center}
-.adc-config{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;align-items:center}
-.adc-config>button{min-height:30px;padding:5px 6px;font-size:12px;line-height:1.15;white-space:nowrap}
-.adc-config>input{width:100%;min-width:0;padding:6px;font-size:13px}
-.adc-config>.selected{background:var(--blue);border-color:var(--blue);color:#fff}
-@media(max-width:760px){.adc-config{grid-template-columns:repeat(2,minmax(0,1fr))}.card table{min-width:820px}}
-</style></head><body><header><h1>ESP32-S3-FreeNove</h1><div>Painel central protegido • GPIO • ADC • 4–20 mA • 0–10 V</div></header><main>
-<section class="card"><div class="summary"><span id="espConnection" class="pill online">ESP32 online</span><span class="pill">ESP32: <b id="espIP">--</b></span><span class="pill">🔒 HTTP Basic</span></div><p><a href="/config.html">Configurar Wi-Fi/IP do ESP32</a> · O ESP32 é o único servidor web.</p></section>
-<section class="card"><h2>GPIOs do ESP32-S3</h2><table><thead><tr><th>GPIO</th><th>Modo</th><th>Estado/leitura</th><th>Comando</th></tr></thead><tbody id="espDigital"></tbody></table></section>
-<section class="card"><h2>Entradas analógicas do ESP32-S3</h2><table><thead><tr><th>GPIO</th><th>ADC / tensão</th><th>Preset e escala</th><th>Resultado</th></tr></thead><tbody id="espAnalog"></tbody></table></section>
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>ESP32-S3-FreeNove</title>
+    <style>
+        /* CSS incorporado para facilitar o estudo e a gravação no LittleFS. */
+        :root {
+            --navy: #17233b;
+            --blue: #2563eb;
+            --bg: #eef2f7
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: #1c2738;
+            font: 15px Arial, sans-serif
+        }
+
+        header {
+            background: linear-gradient(120deg, var(--navy), #254d7a);
+            color: #fff;
+            padding: 22px
+        }
+
+        header h1 {
+            margin: 0 0 6px
+        }
+
+        main {
+            max-width: 1250px;
+            margin: auto;
+            padding: 18px
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 13px;
+            padding: 17px;
+            margin-bottom: 16px;
+            box-shadow: 0 3px 14px #14213d18;
+            overflow: auto
+        }
+
+        .summary {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .pill,
+        .badge {
+            padding: 5px 9px;
+            border-radius: 99px;
+            background: #e7eef8;
+            font-weight: bold
+        }
+
+        .online,
+        .high {
+            background: #dcfce7;
+            color: #08743f
+        }
+
+        .offline,
+        .low {
+            background: #fee2e2;
+            color: #a51d1d
+        }
+
+        .mode-in {
+            background: #e0f2fe;
+            color: #075985
+        }
+
+        .mode-out {
+            background: #ede9fe;
+            color: #5b21b6
+        }
+
+        .mode-adc {
+            background: #fef3c7;
+            color: #92400e
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 760px
+        }
+
+        th,
+        td {
+            padding: 9px;
+            border-bottom: 1px solid #e6eaf0;
+            text-align: left;
+            vertical-align: middle
+        }
+
+        th {
+            background: #f7f9fc
+        }
+
+        button,
+        select,
+        input {
+            padding: 7px;
+            border: 1px solid #cbd3df;
+            border-radius: 7px;
+            background: #fff
+        }
+
+        button {
+            cursor: pointer;
+            font-weight: bold
+        }
+
+        .selected {
+            background: var(--blue);
+            color: #fff
+        }
+
+        .muted {
+            color: #677386;
+            font-size: .92em
+        }
+
+        .adc-config {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(90px, 1fr));
+            gap: 6px
+        }
+
+        a {
+            color: #1658b5
+        }
+
+        #message {
+            position: fixed;
+            right: 15px;
+            bottom: 15px;
+            background: #17233b;
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            display: none
+        }
+
+        @media(max-width:760px) {
+            .adc-config {
+                grid-template-columns: 1fr 1fr
+            }
+        }
+
+        /* Ajuste específico da tabela ADC: colunas, títulos e controles compactos. */
+        .card table {
+            table-layout: fixed;
+            min-width: 900px
+        }
+
+        .card th {
+            text-align: center;
+            vertical-align: middle;
+            white-space: normal
+        }
+
+        .card td {
+            vertical-align: middle
+        }
+
+        .card th:nth-child(1),
+        .card td:nth-child(1) {
+            width: 12%;
+            text-align: left
+        }
+
+        .card th:nth-child(2),
+        .card td:nth-child(2) {
+            width: 18%;
+            text-align: center
+        }
+
+        .card th:nth-child(3),
+        .card td:nth-child(3) {
+            width: 50%;
+            text-align: left
+        }
+
+        .card th:nth-child(4),
+        .card td:nth-child(4) {
+            width: 20%;
+            text-align: center
+        }
+
+        .adc-config {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 6px;
+            align-items: center
+        }
+
+        .adc-config>button {
+            min-height: 30px;
+            padding: 5px 6px;
+            font-size: 12px;
+            line-height: 1.15;
+            white-space: nowrap
+        }
+
+        .adc-config>input {
+            width: 100%;
+            min-width: 0;
+            padding: 6px;
+            font-size: 13px
+        }
+
+        .adc-config>.selected {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff
+        }
+
+        @media(max-width:760px) {
+            .adc-config {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .card table {
+                min-width: 820px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>ESP32-S3-FreeNove</h1>
+        <div>Painel central protegido • GPIO • ADC • 4–20 mA • 0–10 V</div>
+    </header>
+    <main>
+        <section class="card">
+            <div class="summary"><span id="espConnection" class="pill online">ESP32 online</span><span
+                    class="pill">ESP32: <b id="espIP">--</b></span><span class="pill">🔒 HTTP Basic</span></div>
+            <p><a href="/config.html">Configurar Wi-Fi/IP do ESP32</a> · O ESP32 é o único servidor web.</p>
+        </section>
+        <section class="card">
+            <h2>GPIOs do ESP32-S3</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>GPIO</th>
+                        <th>Modo</th>
+                        <th>Estado/leitura</th>
+                        <th>Comando</th>
+                    </tr>
+                </thead>
+                <tbody id="espDigital"></tbody>
+            </table>
+        </section>
+        <section class="card">
+            <h2>Entradas analógicas do ESP32-S3</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>GPIO</th>
+                        <th>ADC / tensão</th>
+                        <th>Preset e escala</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody id="espAnalog"></tbody>
+            </table>
+        </section>
 
 
-</main><div id="message"></div>
-<script>
-/* O navegador consulta diretamente as APIs protegidas do ESP32. */
-const $=id=>document.getElementById(id),defaults={type:'voltage',name:'Tensão',unit:'V',min:0,max:10,shunt:165};
-let espBusy=false;
-function cfg(key){try{return {...defaults,...JSON.parse(localStorage.getItem(key)||'{}')}}catch(e){return {...defaults}}}
-function saveCfg(key,field,value){const c=cfg(key);c[field]=['min','max','shunt'].includes(field)?Number(value):value;localStorage.setItem(key,JSON.stringify(c));refreshAll()}
-function toast(t){$('message').textContent=t;$('message').style.display='block';setTimeout(()=>$('message').style.display='none',1700)}
-async function getJson(url){const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(await r.text());return r.json()}
-async function espCmd(url){try{await getJson(url);await safeRefreshEsp()}catch(e){toast(e.message)}}
-function result(a,c,fullScale){let ratio=a.raw/fullScale,label=a.voltage.toFixed(3)+' V';if(c.type==='ma'){const ma=a.voltage/(c.shunt||165)*1000;ratio=(ma-4)/16;label=ma.toFixed(2)+' mA'}else if(c.type==='v10'){const vin=a.voltage*(fullScale===1023?3:10/3.3);ratio=vin/10;label=vin.toFixed(2)+' V (linha)'}return {label,value:(Number(c.min)+(Number(c.max)-Number(c.min))*ratio).toFixed(2)}}
-function analogRow(a,key,fullScale){const c=cfg(key),v=result(a,c,fullScale);return `<tr><td><b>${a.label}</b></td><td>${a.raw}<br><span class="muted">${a.voltage.toFixed(3)} V</span></td><td><div class="adc-config"><button type="button" class="${c.type==='voltage'?'selected':''}" onclick="saveCfg('${key}','type','voltage')">ADC / tensão</button><button type="button" class="${c.type==='ma'?'selected':''}" onclick="saveCfg('${key}','type','ma')">4–20 mA</button><button type="button" class="${c.type==='v10'?'selected':''}" onclick="saveCfg('${key}','type','v10')">0–10 V</button><input title="Grandeza" value="${c.name}" onchange="saveCfg('${key}','name',this.value)"><input title="Unidade" value="${c.unit}" onchange="saveCfg('${key}','unit',this.value)"><input type="number" title="Mínimo" value="${c.min}" onchange="saveCfg('${key}','min',this.value)"><input type="number" title="Máximo" value="${c.max}" onchange="saveCfg('${key}','max',this.value)">${c.type==='ma'?`<input type="number" title="Shunt (ohms)" value="${c.shunt}" onchange="saveCfg('${key}','shunt',this.value)">`:''}</div></td><td><b>${c.name}: ${v.value} ${c.unit}</b><br><span class="muted">Sinal: ${v.label}</span></td></tr>`}
-async function refreshEsp(){try{const d=await getJson('/api/status');$('espIP').textContent=d.ip;$('espDigital').innerHTML=d.pins.map(p=>{const st=p.state?1:0;return `<tr><td><b>GPIO ${p.pin}</b></td><td><button class="${p.mode==='IN'?'selected':''}" onclick="espCmd('/api/config?pin=${p.pin}&mode=in')">IN</button> <button class="${p.mode==='OUT'?'selected':''}" onclick="espCmd('/api/config?pin=${p.pin}&mode=out')">OUT</button> ${p.pin<=10?`<button class="${p.mode==='ADC'?'selected':''}" onclick="espCmd('/api/config?pin=${p.pin}&mode=adc')">ADC</button>`:''}</td><td><span class="badge mode-${p.mode.toLowerCase()}">${p.mode}</span> ${p.mode==='ADC'?`${p.value} / ${Number(p.voltage).toFixed(3)} V`:`<span class="badge ${st?'high':'low'}">${st?'HIGH':'LOW'}</span>`}</td><td>${p.mode==='OUT'?`<button onclick="espCmd('/api/set?pin=${p.pin}&state=1')">Ligar</button> <button onclick="espCmd('/api/set?pin=${p.pin}&state=0')">Desligar</button>`:'Somente leitura'}</td></tr>`}).join('');const adc=d.pins.filter(p=>p.mode==='ADC').map(p=>({label:'GPIO '+p.pin,raw:p.value,voltage:Number(p.voltage)}));$('espAnalog').innerHTML=adc.length?adc.map(a=>analogRow(a,'esp_'+a.label,4095)).join(''):'<tr><td colspan="4">Configure um GPIO 1–10 como ADC.</td></tr>'}catch(e){$('espConnection').className='pill offline';$('espConnection').textContent='ESP32 indisponível'}}
-/* Impede que um novo ciclo comece antes do anterior terminar. */
-async function safeRefreshEsp(){if(espBusy)return;espBusy=true;try{await refreshEsp()}finally{espBusy=false}}
-function refreshAll(){safeRefreshEsp()}
-async function initialize(){refreshAll()}
-initialize();
-setInterval(safeRefreshEsp,1000);  // Evita sobrecarregar o servidor síncrono.
-</script></body></html>
+    </main>
+    <div id="message"></div>
+    <script>
+        /* O navegador consulta diretamente as APIs protegidas do ESP32. */
+        const $ = id => document.getElementById(id), defaults = { type: 'voltage', name: 'Tensão', unit: 'V', min: 0, max: 10, shunt: 165 };
+        let espBusy = false;
+        function cfg(key) { try { return { ...defaults, ...JSON.parse(localStorage.getItem(key) || '{}') } } catch (e) { return { ...defaults } } }
+        function saveCfg(key, field, value) { const c = cfg(key); c[field] = ['min', 'max', 'shunt'].includes(field) ? Number(value) : value; localStorage.setItem(key, JSON.stringify(c)); refreshAll() }
+        function toast(t) { $('message').textContent = t; $('message').style.display = 'block'; setTimeout(() => $('message').style.display = 'none', 1700) }
+        async function getJson(url) { const r = await fetch(url, { cache: 'no-store' }); if (!r.ok) throw Error(await r.text()); return r.json() }
+        async function espCmd(url) { try { await getJson(url); await safeRefreshEsp() } catch (e) { toast(e.message) } }
+        function result(a, c, fullScale) { let ratio = a.raw / fullScale, label = a.voltage.toFixed(3) + ' V'; if (c.type === 'ma') { const ma = a.voltage / (c.shunt || 165) * 1000; ratio = (ma - 4) / 16; label = ma.toFixed(2) + ' mA' } else if (c.type === 'v10') { const vin = a.voltage * (fullScale === 1023 ? 3 : 10 / 3.3); ratio = vin / 10; label = vin.toFixed(2) + ' V (linha)' } return { label, value: (Number(c.min) + (Number(c.max) - Number(c.min)) * ratio).toFixed(2) } }
+        function analogRow(a, key, fullScale) { const c = cfg(key), v = result(a, c, fullScale); return `<tr><td><b>${a.label}</b></td><td>${a.raw}<br><span class="muted">${a.voltage.toFixed(3)} V</span></td><td><div class="adc-config"><button type="button" class="${c.type === 'voltage' ? 'selected' : ''}" onclick="saveCfg('${key}','type','voltage')">ADC / tensão</button><button type="button" class="${c.type === 'ma' ? 'selected' : ''}" onclick="saveCfg('${key}','type','ma')">4–20 mA</button><button type="button" class="${c.type === 'v10' ? 'selected' : ''}" onclick="saveCfg('${key}','type','v10')">0–10 V</button><input title="Grandeza" value="${c.name}" onchange="saveCfg('${key}','name',this.value)"><input title="Unidade" value="${c.unit}" onchange="saveCfg('${key}','unit',this.value)"><input type="number" title="Mínimo" value="${c.min}" onchange="saveCfg('${key}','min',this.value)"><input type="number" title="Máximo" value="${c.max}" onchange="saveCfg('${key}','max',this.value)">${c.type === 'ma' ? `<input type="number" title="Shunt (ohms)" value="${c.shunt}" onchange="saveCfg('${key}','shunt',this.value)">` : ''}</div></td><td><b>${c.name}: ${v.value} ${c.unit}</b><br><span class="muted">Sinal: ${v.label}</span></td></tr>` }
+        async function refreshEsp() { try { const d = await getJson('/api/status'); $('espIP').textContent = d.ip; $('espDigital').innerHTML = d.pins.map(p => { const st = p.state ? 1 : 0; return `<tr><td><b>GPIO ${p.pin}</b></td><td><button class="${p.mode === 'IN' ? 'selected' : ''}" onclick="espCmd('/api/config?pin=${p.pin}&mode=in')">IN</button> <button class="${p.mode === 'OUT' ? 'selected' : ''}" onclick="espCmd('/api/config?pin=${p.pin}&mode=out')">OUT</button> ${p.pin <= 10 ? `<button class="${p.mode === 'ADC' ? 'selected' : ''}" onclick="espCmd('/api/config?pin=${p.pin}&mode=adc')">ADC</button>` : ''}</td><td><span class="badge mode-${p.mode.toLowerCase()}">${p.mode}</span> ${p.mode === 'ADC' ? `${p.value} / ${Number(p.voltage).toFixed(3)} V` : `<span class="badge ${st ? 'high' : 'low'}">${st ? 'HIGH' : 'LOW'}</span>`}</td><td>${p.mode === 'OUT' ? `<button onclick="espCmd('/api/set?pin=${p.pin}&state=1')">Ligar</button> <button onclick="espCmd('/api/set?pin=${p.pin}&state=0')">Desligar</button>` : 'Somente leitura'}</td></tr>` }).join(''); const adc = d.pins.filter(p => p.mode === 'ADC').map(p => ({ label: 'GPIO ' + p.pin, raw: p.value, voltage: Number(p.voltage) })); $('espAnalog').innerHTML = adc.length ? adc.map(a => analogRow(a, 'esp_' + a.label, 4095)).join('') : '<tr><td colspan="4">Configure um GPIO 1–10 como ADC.</td></tr>' } catch (e) { $('espConnection').className = 'pill offline'; $('espConnection').textContent = 'ESP32 indisponível' } }
+        /* Impede que um novo ciclo comece antes do anterior terminar. */
+        async function safeRefreshEsp() { if (espBusy) return; espBusy = true; try { await refreshEsp() } finally { espBusy = false } }
+        function refreshAll() { safeRefreshEsp() }
+        async function initialize() { refreshAll() }
+        initialize();
+        setInterval(safeRefreshEsp, 1000);  // Evita sobrecarregar o servidor síncrono.
+    </script>
+</body>
+
+</html>
