@@ -15,6 +15,7 @@
 
     * {
       box-sizing: border-box
+        /* evita que padding e border aumentem a largura do elemento */
     }
 
     body {
@@ -22,22 +23,28 @@
       background: var(--bg);
       color: #1c2738;
       font: 15px Arial, sans-serif
+        /* fonte padrão */
     }
 
     header {
       background: linear-gradient(120deg, var(--navy), #254d7a);
       color: #fff;
+      /* texto branco sobre fundo azul escuro */
       padding: 22px
     }
 
     header h1 {
       margin: 0 0 6px
+        /* título principal */
     }
 
     main {
       max-width: 1250px;
+      /* largura máxima do conteúdo */
       margin: auto;
+      /* centraliza horizontalmente */
       padding: 18px
+        /* espaçamento interno */
     }
 
     .card {
@@ -177,13 +184,13 @@
 
     .card th:nth-child(1),
     .card td:nth-child(1) {
-      width: 12%;
+      width: 8%;
       text-align: left
     }
 
     .card th:nth-child(2),
     .card td:nth-child(2) {
-      width: 18%;
+      width: 10%;
       text-align: center
     }
 
@@ -241,7 +248,7 @@
 
 <body>
   <header>
-    <h1>ESP32-S3-FreeNove</h1>
+    <h1>ESP32-S3-FreeNove - Servidor Web para controle de GPIOs e ADCs</h1>
     <div>Painel central protegido • GPIO • ADC • 4–20 mA • 0–10 V</div>
   </header>
   <main>
@@ -250,7 +257,7 @@
       <div class="summary"><span id="espConnection" class="pill online">ESP32 online</span><span class="pill">ESP32: <b
             id="espIP">--</b></span><span class="pill">PSRAM: <b id="psramInfo">verificando...</b></span><span
           class="pill">JSON: <b id="jsonMemory">--</b></span><span class="pill">🔒 HTTP Basic</span></div>
-      <p><a href="/config.html">Configurar Wi-Fi/IP do ESP32</a> · O ESP32 é o único servidor web.</p>
+      <p><a href="/config.html">Configurar Wi-Fi/IP do ESP32</a></p>
     </section>
     <section class="card">
       <h2>GPIOs do ESP32-S3</h2>
